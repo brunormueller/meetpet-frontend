@@ -13,20 +13,32 @@ const Input = forwardRef((props, ref) => {
     } = props;
 
     const [value, setValue] = useState(defaultValue || '');
+    const [valid, setValid] = useState(true);
 
     const getValue = () => {
         return value;
     };
 
+    const handleOnChangeText = nextValue => {
+        if (!valid) {
+            setValid(true);
+        }
+
+        setValue(nextValue);
+    }
+
     useImperativeHandle(ref, () => ({
         getValue,
+        setValid,
     }));
 
     return (
         <KittenInput
             {...props}
             value={value}
-            onChangeText={nextValue => setValue(nextValue)}
+            status={valid ? 'basic' : 'danger'}
+            caption={valid ? null : 'Campo obrigatório'}
+            onChangeText={handleOnChangeText}
         />
 
     );

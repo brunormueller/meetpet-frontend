@@ -37,27 +37,71 @@ function RegistryScreen() {
     };
 
     const handleOnSaveButtonPress = async () => {
-        let name = getInputNameRef().getValue();
-        let type = getInputTypeRef().getValue();
-        let login = getInputLoginRef().getValue();
-        let password = getInputPasswordRef().getValue();
-        let confirmPassword = getInputConfirmPasswordRef().getValue();
+        let auxInputNameRef = getInputNameRef();
+        let auxInputTypeRef = getInputTypeRef();
+        let auxInputLoginRef = getInputLoginRef();
+        let auxInputPasswordRef = getInputPasswordRef();
+        let auxInputConfirmPasswordRef = getInputConfirmPasswordRef();
 
-        if (password != confirmPassword) {
-            alert('Favor confirmar a senha');
-        } else {
-            try {
-                await axios.post('http://10.10.117.56:3000/users/register', {
-                    name,
-                    type,
-                    login,
-                    password,
-                    photo: 'fixo.jpg',
-                });
+        let name = auxInputNameRef.getValue();
+        let type = auxInputTypeRef.getValue();
+        let login = auxInputLoginRef.getValue();
+        let password = auxInputPasswordRef.getValue();
+        let confirmPassword = auxInputConfirmPasswordRef.getValue();
 
-                alert('Cadastro feito com sucesso');
-            } catch (error) {
-                console.error(error);
+        let isNameValid = true;
+        let isTypeValid = true;
+        let isLoginValid = true;
+        let isPasswordValid = true;
+        let isConfirmPasswordValid = true;
+
+        if (!name) {
+            isNameValid = false;
+
+            auxInputNameRef.setValid(false);
+        }
+
+        if (!type) {
+            isTypeValid = false;
+
+            auxInputTypeRef.setValid(false);
+        }
+
+        if (!login) {
+            isLoginValid = false;
+
+            auxInputLoginRef.setValid(false);
+        }
+
+        if (!password) {
+            isPasswordValid = false;
+
+            auxInputPasswordRef.setValid(false);
+        }
+
+        if (!confirmPassword) {
+            isConfirmPasswordValid = false;
+
+            auxInputConfirmPasswordRef.setValid(false);
+        }
+
+        if (isNameValid && isTypeValid && isLoginValid && isPasswordValid && isConfirmPasswordValid) {
+            if (password != confirmPassword) {
+                alert('Favor confirmar a senha');
+            } else {
+                try {
+                    await axios.post('http://10.10.117.56:3000/users/register', {
+                        name,
+                        type,
+                        login,
+                        password,
+                        photo: 'fixo.jpg',
+                    });
+
+                    alert('Cadastro feito com sucesso');
+                } catch (error) {
+                    console.error(error);
+                }
             }
         }
     };
