@@ -9,7 +9,7 @@ import {
 
 import Input from './components/Input';
 
-function RegistryScreen() {
+export const RegistryScreen = ({ navigation }) => {
     const inputNameRef = createRef(null);
     const inputTypeRef = createRef(null);
     const inputLoginRef = createRef(null);
@@ -34,6 +34,10 @@ function RegistryScreen() {
 
     const getInputConfirmPasswordRef = () => {
         return inputConfirmPasswordRef.current;
+    };
+
+    const handleOnBackButtonPress = () => {
+        navigation.navigate('Login');
     };
 
     const handleOnSaveButtonPress = async () => {
@@ -98,9 +102,9 @@ function RegistryScreen() {
                         photo: 'fixo.jpg',
                     });
 
-                    alert('Cadastro feito com sucesso');
+                    navigation.navigate('Home');
                 } catch (error) {
-                    console.error(error);
+                    alert('Falha ao tentar fazer o cadastro');
                 }
             }
         }
@@ -155,11 +159,20 @@ function RegistryScreen() {
             />
             <Layout
                 style={{
+                    flexDirection: 'row',
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
                     width: '100%',
                 }}
             >
+                <Button
+                    onPress={handleOnBackButtonPress}
+                    style={{
+                        marginRight: '5%',
+                    }}
+                >
+                    VOLTAR
+                </Button>
                 <Button onPress={handleOnSaveButtonPress}>
                     SALVAR
                 </Button>
@@ -168,5 +181,3 @@ function RegistryScreen() {
         </Layout>
     );
 }
-
-export default RegistryScreen;

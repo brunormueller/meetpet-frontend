@@ -3,11 +3,13 @@ import React, {
 } from 'react';
 import {
     SafeAreaView,
+    TouchableOpacity,
 } from 'react-native';
 import axios from 'axios';
 import {
     Button,
     Layout,
+    Text,
 } from '@ui-kitten/components';
 
 import Input from './components/Input';
@@ -22,6 +24,10 @@ export const LoginScreen = ({ navigation }) => {
 
     const getInputPasswordRef = () => {
         return inputPasswordRef.current;
+    };
+
+    const handleOnRegistryButtonPress = () => {
+        navigation.navigate('Registry');
     };
 
     const handleOnLoginButtonPress = async () => {
@@ -74,6 +80,16 @@ export const LoginScreen = ({ navigation }) => {
                         width: '100%',
                     }}
                 >
+                    <TouchableOpacity onPress={handleOnRegistryButtonPress}>
+                        <Text
+                            status='primary'
+                            style={{
+                                marginBottom: '5%',
+                            }}
+                        >
+                            Clique aqui para fazer o cadastro
+                        </Text>
+                    </TouchableOpacity>
                     <Button onPress={handleOnLoginButtonPress}>
                         ENTRAR
                     </Button>
