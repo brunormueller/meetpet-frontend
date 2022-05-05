@@ -1,6 +1,9 @@
 import React, {
     createRef,
 } from 'react';
+import {
+    SafeAreaView,
+} from 'react-native';
 import axios from 'axios';
 import {
     Button,
@@ -9,7 +12,7 @@ import {
 
 import Input from './components/Input';
 
-function LoginScreen() {
+export const LoginScreen = ({ navigation }) => {
     const inputLoginRef = createRef(null);
     const inputPasswordRef = createRef(null);
 
@@ -28,7 +31,7 @@ function LoginScreen() {
                 password: getInputPasswordRef().getValue(),
             });
 
-            alert('Login feito com sucesso');
+            navigation.navigate('Home');
         } catch (error) {
             if (error && error.response && error.response.status == 401) {
                 alert('Usuário ou senha inválido');
@@ -39,43 +42,43 @@ function LoginScreen() {
     };
 
     return (
-        <Layout
-            style={{
-                flex: 1,
-                justifyContent: 'center',
-                alignItems: 'center',
-                width: '100%',
-                padding: '5%',
-            }}
-        >
-            <Input
-                ref={inputLoginRef}
-                placeholder='Usuário'
-                style={{
-                    paddingBottom: '5%',
-                }}
-            />
-            <Input
-                secureTextEntry
-                ref={inputPasswordRef}
-                placeholder='Senha'
-                style={{
-                    paddingBottom: '5%',
-                }}
-            />
+        <SafeAreaView style={{ flex: 1 }}>
             <Layout
                 style={{
-                    justifyContent: 'flex-end',
-                    alignItems: 'flex-end',
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
                     width: '100%',
+                    padding: '5%',
                 }}
             >
-                <Button onPress={handleOnLoginButtonPress}>
-                    ENTRAR
-                </Button>
+                <Input
+                    ref={inputLoginRef}
+                    placeholder='Usuário'
+                    style={{
+                        paddingBottom: '5%',
+                    }}
+                />
+                <Input
+                    secureTextEntry
+                    ref={inputPasswordRef}
+                    placeholder='Senha'
+                    style={{
+                        paddingBottom: '5%',
+                    }}
+                />
+                <Layout
+                    style={{
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end',
+                        width: '100%',
+                    }}
+                >
+                    <Button onPress={handleOnLoginButtonPress}>
+                        ENTRAR
+                    </Button>
+                </Layout>
             </Layout>
-        </Layout>
+        </SafeAreaView>
     );
 }
-
-export default LoginScreen;
