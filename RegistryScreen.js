@@ -8,10 +8,11 @@ import {
 } from '@ui-kitten/components';
 
 import Input from './components/Input';
+import Select from './components/Select';
 
 export const RegistryScreen = ({ navigation }) => {
     const inputNameRef = createRef(null);
-    const inputTypeRef = createRef(null);
+    const selectTypeRef = createRef(null);
     const inputLoginRef = createRef(null);
     const inputPasswordRef = createRef(null);
     const inputConfirmPasswordRef = createRef(null);
@@ -20,8 +21,8 @@ export const RegistryScreen = ({ navigation }) => {
         return inputNameRef.current;
     };
 
-    const getInputTypeRef = () => {
-        return inputTypeRef.current;
+    const getSelectTypeRef = () => {
+        return selectTypeRef.current;
     };
 
     const getInputLoginRef = () => {
@@ -42,13 +43,13 @@ export const RegistryScreen = ({ navigation }) => {
 
     const handleOnSaveButtonPress = async () => {
         let auxInputNameRef = getInputNameRef();
-        let auxInputTypeRef = getInputTypeRef();
+        let auxSelectTypeRef = getSelectTypeRef();
         let auxInputLoginRef = getInputLoginRef();
         let auxInputPasswordRef = getInputPasswordRef();
         let auxInputConfirmPasswordRef = getInputConfirmPasswordRef();
 
         let name = auxInputNameRef.getValue();
-        let type = auxInputTypeRef.getValue();
+        let type = auxSelectTypeRef.getValue();
         let login = auxInputLoginRef.getValue();
         let password = auxInputPasswordRef.getValue();
         let confirmPassword = auxInputConfirmPasswordRef.getValue();
@@ -68,7 +69,7 @@ export const RegistryScreen = ({ navigation }) => {
         if (!type) {
             isTypeValid = false;
 
-            auxInputTypeRef.setValid(false);
+            auxSelectTypeRef.setValid(false);
         }
 
         if (!login) {
@@ -127,12 +128,23 @@ export const RegistryScreen = ({ navigation }) => {
                     paddingBottom: '5%',
                 }}
             />
-            <Input
-                ref={inputTypeRef}
+            <Select
+                ref={selectTypeRef}
                 placeholder='Tipo'
                 style={{
+                    with: '100%',
                     paddingBottom: '5%',
                 }}
+                options={[
+                    {
+                        value: 'R',
+                        display: 'Responsável',
+                    },
+                    {
+                        value: 'C',
+                        display: 'Comum',
+                    },
+                ]}
             />
             <Input
                 ref={inputLoginRef}
