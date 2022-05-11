@@ -32,12 +32,16 @@ export const LoginScreen = ({ navigation }) => {
 
     const handleOnLoginButtonPress = async () => {
         try {
-            await axios.post('http://10.10.117.56:3000/users/login', {
+            const { data } = await axios.post('http://10.10.117.56:3000/users/login', {
                 login: getInputLoginRef().getValue(),
                 password: getInputPasswordRef().getValue(),
             });
 
-            navigation.navigate('Home');
+            if (data.type == 'R') {
+                navigation.navigate('Pets');
+            } else {
+                navigation.navigate('Home');
+            }
         } catch (error) {
             if (error && error.response && error.response.status == 401) {
                 alert('Usuário ou senha inválido');

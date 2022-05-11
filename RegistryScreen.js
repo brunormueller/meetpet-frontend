@@ -103,7 +103,11 @@ export const RegistryScreen = ({ navigation }) => {
                         photo: 'fixo.jpg',
                     });
 
-                    navigation.navigate('Home');
+                    if (type == 'R') {
+                        navigation.navigate('Pets');
+                    } else {
+                        navigation.navigate('Home');
+                    }
                 } catch (error) {
                     alert('Falha ao tentar fazer o cadastro');
                 }
