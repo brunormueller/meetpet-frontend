@@ -31,6 +31,14 @@ const getPetSize = size => {
     }
 };
 
+const getPetAge = age => {
+    if (age == 1) {
+        return `${age} anos`;
+    }
+
+    return '1 ano';
+};
+
 export const PetsScreen = () => {
     return (
         <Layout
@@ -68,7 +76,7 @@ export const PetsScreen = () => {
                 <List
                     baseURL='http://10.10.117.56:3000/pets'
                     getTitle={item => item.name}
-                    getDescription={item => `${getPetGenre(item.genre)} (${getPetSize(item.size)})`}
+                    getDescription={item => `${getPetGenre(item.genre)}, ${getPetSize(item.size)}, ${getPetAge(item.age)}`}
                 />
             </Layout>
         </Layout>
