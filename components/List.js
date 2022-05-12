@@ -1,29 +1,59 @@
-import React from 'react';
-import {
-    StyleSheet,
-} from 'react-native';
+import React, {
+    useCallback,
+    useEffect,
+    useState,
+} from 'react';
+import axios from 'axios';
 import {
     Divider as KittenDivider,
     List as KittenList,
     ListItem as KittenListItem,
 } from '@ui-kitten/components';
 
-const data = new Array(20).fill({
-    title: 'Item',
-    description: 'Description for Item',
-});
+const List = (props) => {
+    const {
+        baseURL,
+        getTitle,
+        getDescription,
+    } = props;
 
-const List = () => {
+    const [state, setState] = useState({
+        loadData: true,
+        rows: [],
+    });
+
+    const getData = useCallback(async () => {
+        try {
+            const { data } = await axios.get(baseURL);
+
+            setState({
+                loadData: false,
+                rows: data,
+            });
+        } catch (error) {
+            alert('Falha ao tentar carregar os dados');
+        }
+    }, [baseURL]);
+
+    useEffect(() => {
+        setTimeout(() => {
+            if (state.loadData) {
+                getData();
+            }
+        }, 0);
+    }, [state.loadData, getData]);
+
     const renderItem = ({ item, index }) => (
         <KittenListItem
-            title={`${item.title} ${index + 1}`}
-            description={`${item.description} ${index + 1}`}
+            key={index}
+            title={getTitle(item)}
+            description={getDescription(item)}
         />
     );
 
     return (
         <KittenList
-            data={data}
+            data={state.rows}
             ItemSeparatorComponent={KittenDivider}
             renderItem={renderItem}
         />

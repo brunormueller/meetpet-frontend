@@ -7,6 +7,30 @@ import {
 
 import List from './components/List';
 
+const getPetGenre = genre => {
+    switch (genre) {
+        case 'M':
+            return 'Macho';
+        case 'F':
+            return 'Fêmea';
+        default:
+            return 'Indefinido';
+    }
+};
+
+const getPetSize = size => {
+    switch (size) {
+        case 'P':
+            return 'Pequeno';
+        case 'M':
+            return 'Médio';
+        case 'G':
+            return 'Grande';
+        default:
+            return 'Indefinido';
+    }
+};
+
 export const PetsScreen = () => {
     return (
         <Layout
@@ -41,7 +65,11 @@ export const PetsScreen = () => {
                     flexDirection: 'row',
                 }}
             >
-                <List />
+                <List
+                    baseURL='http://10.10.117.56:3000/pets'
+                    getTitle={item => item.name}
+                    getDescription={item => `${getPetGenre(item.genre)} (${getPetSize(item.size)})`}
+                />
             </Layout>
         </Layout>
     );
