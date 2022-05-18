@@ -15,6 +15,7 @@ import {
 const List = forwardRef((props, ref) => {
     const {
         baseURL,
+        accessoryRight,
         getTitle,
         getDescription,
     } = props;
@@ -50,6 +51,7 @@ const List = forwardRef((props, ref) => {
             key={index}
             title={getTitle(item)}
             description={getDescription(item)}
+            accessoryRight={accessoryRight}
         />
     );
 

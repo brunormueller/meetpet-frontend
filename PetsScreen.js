@@ -5,6 +5,7 @@ import React, {
 } from 'react';
 import {
     Button,
+    Icon,
     Layout,
     Text,
 } from '@ui-kitten/components';
@@ -63,6 +64,40 @@ export const PetsScreen = forwardRef((props, ref) => {
         getPetsListRef().getData();
     };
 
+    const EditIcon = (props) => (
+        <Icon
+            {...props}
+            name='edit'
+        />
+    );
+
+    const TrashIcon = (props) => (
+        <Icon
+            {...props}
+            name='trash'
+        />
+    );
+
+    const renderItemAccessory = (props) => (
+        <Layout
+            style={{
+                flexDirection: 'row',
+            }}
+        >
+            <Button
+                size='small'
+                accessoryLeft={EditIcon}
+                style={{
+                    marginRight: '5%',
+                }}
+            />
+            <Button
+                size='small'
+                accessoryLeft={TrashIcon}
+            />
+        </Layout>
+    );
+
     useImperativeHandle(ref, () => ({
         refreshList,
     }));
@@ -105,6 +140,7 @@ export const PetsScreen = forwardRef((props, ref) => {
                     baseURL={`${baseURL}/pets`}
                     getTitle={item => item.name}
                     getDescription={item => `${getPetGenre(item.genre)}, ${getPetSize(item.size)}, ${getPetAge(item.age)}`}
+                    accessoryRight={renderItemAccessory}
                 />
             </Layout>
         </Layout>
