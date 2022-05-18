@@ -6,6 +6,7 @@ import {
 } from '@ui-kitten/components';
 
 import List from './components/List';
+import { baseURL } from './configs'
 
 const getPetGenre = genre => {
     switch (genre) {
@@ -39,7 +40,10 @@ const getPetAge = age => {
     return '1 ano';
 };
 
-export const PetsScreen = () => {
+export const PetsScreen = ({ navigation }) => {
+    const handleOnNewPetButtonPress = () => {
+        navigation.navigate('NewPet');
+    };
     return (
         <Layout
             style={{
@@ -63,7 +67,7 @@ export const PetsScreen = () => {
                 >
                     LISTA DE PETS
                 </Text>
-                <Button>
+                <Button onPress={handleOnNewPetButtonPress}>
                     NOVO
                 </Button>
             </Layout>
@@ -74,7 +78,7 @@ export const PetsScreen = () => {
                 }}
             >
                 <List
-                    baseURL='http://10.10.117.56:3000/pets'
+                    baseURL={`${baseURL}/pets`}
                     getTitle={item => item.name}
                     getDescription={item => `${getPetGenre(item.genre)}, ${getPetSize(item.size)}, ${getPetAge(item.age)}`}
                 />

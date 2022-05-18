@@ -9,6 +9,7 @@ import {
 
 import Input from './components/Input';
 import Select from './components/Select';
+import { baseURL } from './configs'
 
 export const RegistryScreen = ({ navigation }) => {
     const inputNameRef = createRef(null);
@@ -95,7 +96,7 @@ export const RegistryScreen = ({ navigation }) => {
                 alert('Favor confirmar a senha');
             } else {
                 try {
-                    await axios.post('http://10.10.117.56:3000/users/register', {
+                    await axios.post(`${baseURL}/users/register`, {
                         name,
                         type,
                         login,

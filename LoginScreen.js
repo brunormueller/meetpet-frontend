@@ -13,6 +13,7 @@ import {
 } from '@ui-kitten/components';
 
 import Input from './components/Input';
+import { baseURL } from './configs'
 
 export const LoginScreen = ({ navigation }) => {
     const inputLoginRef = createRef(null);
@@ -32,7 +33,7 @@ export const LoginScreen = ({ navigation }) => {
 
     const handleOnLoginButtonPress = async () => {
         try {
-            const { data } = await axios.post('http://10.10.117.56:3000/users/login', {
+            const { data } = await axios.post(`${baseURL}/users/login`, {
                 login: getInputLoginRef().getValue(),
                 password: getInputPasswordRef().getValue(),
             });

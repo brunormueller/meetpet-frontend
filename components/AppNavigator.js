@@ -5,6 +5,7 @@ import { HomeScreen } from '../HomeScreen';
 import { LoginScreen } from '../LoginScreen';
 import { RegistryScreen } from '../RegistryScreen';
 import { PetsScreen } from '../PetsScreen';
+import { NewPetScreen } from '../NewPetScreen';
 
 const { Navigator, Screen } = createStackNavigator();
 
@@ -14,6 +15,7 @@ const HomeNavigator = () => (
         <Screen name='Registry' component={RegistryScreen} />
         <Screen name='Home' component={HomeScreen} />
         <Screen name='Pets' component={PetsScreen} />
+        <Screen name='NewPet' component={NewPetScreen} />
     </Navigator>
 );
 
