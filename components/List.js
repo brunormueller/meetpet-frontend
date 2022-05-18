@@ -1,6 +1,8 @@
 import React, {
+    forwardRef,
     useCallback,
     useEffect,
+    useImperativeHandle,
     useState,
 } from 'react';
 import axios from 'axios';
@@ -10,7 +12,7 @@ import {
     ListItem as KittenListItem,
 } from '@ui-kitten/components';
 
-const List = (props) => {
+const List = forwardRef((props, ref) => {
     const {
         baseURL,
         getTitle,
@@ -51,6 +53,10 @@ const List = (props) => {
         />
     );
 
+    useImperativeHandle(ref, () => ({
+        getData,
+    }));
+
     return (
         <KittenList
             data={state.rows}
@@ -58,6 +64,6 @@ const List = (props) => {
             renderItem={renderItem}
         />
     );
-};
+});
 
 export default List;

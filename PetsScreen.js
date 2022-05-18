@@ -1,4 +1,8 @@
-import React from 'react';
+import React, {
+    createRef,
+    forwardRef,
+    useImperativeHandle,
+} from 'react';
 import {
     Button,
     Layout,
@@ -34,16 +38,35 @@ const getPetSize = size => {
 
 const getPetAge = age => {
     if (age == 1) {
-        return `${age} anos`;
+        return '1 ano';
     }
 
-    return '1 ano';
+    return `${age} anos`;
 };
 
-export const PetsScreen = ({ navigation }) => {
+export const PetsScreen = forwardRef((props, ref) => {
+    const {
+        navigation,
+    } = props;
+
+    const petsListRef = createRef();
+
+    const getPetsListRef = () => {
+        return petsListRef.current;
+    };
+
     const handleOnNewPetButtonPress = () => {
         navigation.navigate('NewPet');
     };
+
+    const refreshList = () => {
+        getPetsListRef().getData();
+    };
+
+    useImperativeHandle(ref, () => ({
+        refreshList,
+    }));
+
     return (
         <Layout
             style={{
@@ -78,6 +101,7 @@ export const PetsScreen = ({ navigation }) => {
                 }}
             >
                 <List
+                    ref={petsListRef}
                     baseURL={`${baseURL}/pets`}
                     getTitle={item => item.name}
                     getDescription={item => `${getPetGenre(item.genre)}, ${getPetSize(item.size)}, ${getPetAge(item.age)}`}
@@ -85,4 +109,4 @@ export const PetsScreen = ({ navigation }) => {
             </Layout>
         </Layout>
     );
-};
+});

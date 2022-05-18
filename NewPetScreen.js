@@ -1,4 +1,8 @@
-import React, { createRef,useState, useEffect } from 'react';
+import React, {
+    createRef,
+    useState,
+    useEffect,
+} from 'react';
 import {
     Button,
     Layout,
@@ -10,7 +14,12 @@ import Select from './components/Select';
 import Input from './components/Input';
 import { baseURL } from './configs'
 
-export const NewPetScreen = ({ navigation }) => {
+export const NewPetScreen = (props) => {
+    const {
+        navigation,
+        onInsertPet,
+    } = props;
+
     const [state, setState] = useState({
         loadData: true,
         breeds: [],
@@ -44,10 +53,11 @@ export const NewPetScreen = ({ navigation }) => {
                 breed: selectBreedRef.current.getValue(),
                 size: selectSizeRef.current.getValue(),
                 genre: selectGenreRef.current.getValue(),
-            }).then(({status} = response) => {
+            }).then(({ status } = response) => {
                 if (status === 200 || status === 201 || status === 204) {
                     navigation.navigate('Pets');
                     alert('Pet cadastrado com sucesso');
+                    onInsertPet();
                 }
             });
         } catch (error) {
@@ -103,7 +113,7 @@ export const NewPetScreen = ({ navigation }) => {
                         paddingBottom: '5%',
                     }}
                     options={state.breeds.map(breed => {
-                        return {value: breed.id, display: breed.name}
+                        return { value: breed.id, display: breed.name }
                     })}
                 />
                 <Select
@@ -114,9 +124,9 @@ export const NewPetScreen = ({ navigation }) => {
                         paddingBottom: '5%',
                     }}
                     options={[
-                        {value: 'p', display: 'Pequeno'},
-                        {value: 'm', display: 'value'},
-                        {value: 'g', display: 'Grande'}
+                        { value: 'P', display: 'Pequeno' },
+                        { value: 'M', display: 'Médio' },
+                        { value: 'G', display: 'Grande' }
                     ]}
                 />
                 <Select
@@ -127,8 +137,8 @@ export const NewPetScreen = ({ navigation }) => {
                         paddingBottom: '5%',
                     }}
                     options={[
-                        {value: 'm', display: 'Maculino'},
-                        {value: 'f', display: 'Feminino'},
+                        { value: 'M', display: 'Maculino' },
+                        { value: 'F', display: 'Feminino' },
                     ]}
                 />
                 <Button onPress={handleOnAddPetButtonPress}>
