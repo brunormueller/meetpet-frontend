@@ -60,6 +60,14 @@ export const PetsScreen = forwardRef((props, ref) => {
         navigation.navigate('NewPet');
     };
 
+    const handleOnEditPetButtonPress = item => {
+        alert(`Edit pet ${item.id}`);
+    };
+
+    const handleOnDeletePetButtonPress = item => {
+        alert(`Delete pet ${item.id}`);
+    };
+
     const refreshList = () => {
         getPetsListRef().getData();
     };
@@ -78,7 +86,7 @@ export const PetsScreen = forwardRef((props, ref) => {
         />
     );
 
-    const renderItemAccessory = (props) => (
+    const renderAccessoryRight = (props, item) => (
         <Layout
             style={{
                 flexDirection: 'row',
@@ -87,6 +95,7 @@ export const PetsScreen = forwardRef((props, ref) => {
             <Button
                 size='small'
                 accessoryLeft={EditIcon}
+                onPress={() => handleOnEditPetButtonPress(item)}
                 style={{
                     marginRight: '5%',
                 }}
@@ -94,6 +103,7 @@ export const PetsScreen = forwardRef((props, ref) => {
             <Button
                 size='small'
                 accessoryLeft={TrashIcon}
+                onPress={() => handleOnDeletePetButtonPress(item)}
             />
         </Layout>
     );
@@ -140,7 +150,7 @@ export const PetsScreen = forwardRef((props, ref) => {
                     baseURL={`${baseURL}/pets`}
                     getTitle={item => item.name}
                     getDescription={item => `${getPetGenre(item.genre)}, ${getPetSize(item.size)}, ${getPetAge(item.age)}`}
-                    accessoryRight={renderItemAccessory}
+                    renderAccessoryRight={renderAccessoryRight}
                 />
             </Layout>
         </Layout>
