@@ -16,9 +16,14 @@ import { baseURL } from './configs'
 
 export const NewPetScreen = (props) => {
     const {
+        routeParams,
         navigation,
         onInsertPet,
     } = props;
+
+    if (routeParams) {
+        alert(routeParams.id); //TODO: tratar
+    }
 
     const [state, setState] = useState({
         loadData: true,

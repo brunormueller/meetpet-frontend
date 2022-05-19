@@ -38,8 +38,12 @@ const HomeNavigator = () => {
             />
             <Screen
                 name='NewPet'
-                component={({ navigation }) =>
+                component={({
+                    route,
+                    navigation,
+                }) =>
                     <NewPetScreen
+                        routeParams={route.params}
                         navigation={navigation}
                         onInsertPet={handleOnInsertPet}
                     />

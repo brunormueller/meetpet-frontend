@@ -61,7 +61,7 @@ export const PetsScreen = forwardRef((props, ref) => {
     };
 
     const handleOnEditPetButtonPress = item => {
-        alert(`Edit pet ${item.id}`);
+        navigation.navigate('NewPet', item);
     };
 
     const handleOnDeletePetButtonPress = item => {
