@@ -12,6 +12,9 @@ const Input = forwardRef((props, ref) => {
         defaultValue
     } = props;
 
+    const errorMessage = props.errorMessage ? props.errorMessage : 'Campo obrigatório'
+    const keyboardType = props.keyboardType ? props.keyboardType : 'text'
+
     const [value, setValue] = useState(defaultValue || '');
     const [valid, setValid] = useState(true);
 
@@ -37,8 +40,9 @@ const Input = forwardRef((props, ref) => {
             {...props}
             value={value}
             status={valid ? 'basic' : 'danger'}
-            caption={valid ? null : 'Campo obrigatório'}
+            caption={valid ? null : errorMessage}
             onChangeText={handleOnChangeText}
+            keyboardType={keyboardType}
         />
 
     );

@@ -1,14 +1,20 @@
 import React, {
     createRef,
+    useState,
     forwardRef,
     useImperativeHandle,
 } from 'react';
+
 import {
     Button,
     Icon,
     Layout,
     Text,
+    Card,
+    Modal,
 } from '@ui-kitten/components';
+
+import axios from 'axios'
 
 import List from './components/List';
 import { baseURL } from './configs'
@@ -50,6 +56,11 @@ export const PetsScreen = forwardRef((props, ref) => {
         navigation,
     } = props;
 
+    const [state, setState] = useState({
+        modalVisible: false,
+        petSelected: {},
+    });
+
     const petsListRef = createRef();
 
     const getPetsListRef = () => {
@@ -65,8 +76,33 @@ export const PetsScreen = forwardRef((props, ref) => {
     };
 
     const handleOnDeletePetButtonPress = item => {
-        alert(`Delete pet ${item.id}`);
+        setState({
+            modalVisible: true,
+            petSelected: item
+        })
     };
+
+    const handleOnRemovePetButtonPress = async () => {
+        try {
+            const listPets = getPetsListRef();
+
+            await axios.delete(`${baseURL}/pets/${state.petSelected.id}`)
+            .then(() => {
+                alert('Pet removido com sucesso');
+                setState({
+                    modalVisible: false
+                })
+
+                listPets.getData()
+            })
+            .catch(error => {
+                console.error(error)
+                alert('Falha ao remover o pet');
+            })
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     const refreshList = () => {
         getPetsListRef().getData();
@@ -153,6 +189,23 @@ export const PetsScreen = forwardRef((props, ref) => {
                     renderAccessoryRight={renderAccessoryRight}
                 />
             </Layout>
+            <Modal
+                visible={state.modalVisible}
+                onBackdropPress={() => setState({
+                    modalVisible: false
+                })}>
+                <Card disabled={true}>
+                <Text>Tem certeza que deseja excluir o Pet {state.petSelected?.name}</Text>
+                <Button onPress={() => handleOnRemovePetButtonPress(state.petSelected?.id)}>
+                    Confirmar
+                </Button>
+                <Button onPress={() => setState({
+                    modalVisible: false
+                })}>
+                    Cancelar
+                </Button>
+                </Card>
+            </Modal>
         </Layout>
     );
 });

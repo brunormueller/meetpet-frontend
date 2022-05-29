@@ -21,10 +21,6 @@ export const NewPetScreen = (props) => {
         onInsertPet,
     } = props;
 
-    if (routeParams) {
-        alert(routeParams.id); //TODO: tratar
-    }
-
     const [state, setState] = useState({
         loadData: true,
         breeds: [],
@@ -50,28 +46,76 @@ export const NewPetScreen = (props) => {
         }, 0);
     }, [state.loadData, setState]);
 
-    const handleOnAddPetButtonPress = async () => {
+    const handleOnAddOrEditPetButtonPress = async () => {
+        const name = inputNameRef.current.getValue();
+        const age = parseInt(inputAgeRef.current.getValue());
+        const breed = selectBreedRef.current.getValue();
+        const size = selectSizeRef.current.getValue();
+        const genre = selectGenreRef.current.getValue();
+
+        let isNameValid = true;
+        let isAgeValid = true;
+        let isBreedValid = true;
+        let isSizeValid = true;
+        let isGenreValid = true;
+
+        if (!name) {
+            isNameValid = false;
+
+            inputNameRef.current.setValid(false);
+        }
+
+        if (!age) {
+            isAgeValid = false;
+
+            inputAgeRef.current.setValid(false);
+        }
+
+        if (!breed) {
+            isBreedValid = false;
+
+            selectBreedRef.current.setValid(false);
+        }
+
+        if (!size) {
+            isSizeValid = false;
+
+            selectSizeRef.current.setValid(false);
+        }
+
+        if (!genre) {
+            isGenreValid = false;
+
+            selectGenreRef.current.setValid(false);
+        }
+        if (!isNameValid || !isAgeValid || !isBreedValid || !isSizeValid || !isGenreValid)
+            return;
+
+        const isEdit = routeParams?.id ? true : false
         try {
-            await axios.post(`${baseURL}/pets`, {
-                name: inputNameRef.current.getValue(),
-                age: parseInt(inputAgeRef.current.getValue()),
-                breed: selectBreedRef.current.getValue(),
-                size: selectSizeRef.current.getValue(),
-                genre: selectGenreRef.current.getValue(),
+            await axios({
+                method: isEdit ? 'PATCH' : 'POST',
+                url: `${baseURL}/pets${isEdit ? `/${routeParams.id}` : ''}`,
+                data: {
+                    name,
+                    age,
+                    breed,
+                    size,
+                    genre
+                }
             }).then(({ status } = response) => {
                 if (status === 200 || status === 201 || status === 204) {
                     navigation.navigate('Pets');
-                    alert('Pet cadastrado com sucesso');
+                    alert(isEdit ? 'Pet editado com sucesso' : 'Pet cadastrado com sucesso');
                     onInsertPet();
                 }
             });
         } catch (error) {
-            console.log(error.response)
             if (error && error.response && error.response.status == 401) {
                 alert('Favor realizar o login novamente');
                 navigation.navigate('Login')
             } else {
-                alert('Falha ao tentar cadastrar o pet');
+                alert(isEdit ? 'Falha ao tentar editar o pet': 'Falha ao tentar cadastrar o pet');
             }
         }
     };
@@ -81,6 +125,7 @@ export const NewPetScreen = (props) => {
     const selectBreedRef = createRef(null);
     const selectSizeRef = createRef(null);
     const selectGenreRef = createRef(null);
+
     return (
         <Layout
             style={{
@@ -99,6 +144,7 @@ export const NewPetScreen = (props) => {
                 <Input
                     ref={inputNameRef}
                     placeholder='Nome'
+                    defaultValue={routeParams?.name ? routeParams.name : ''}
                     style={{
                         paddingBottom: '5%',
                     }}
@@ -106,6 +152,8 @@ export const NewPetScreen = (props) => {
                 <Input
                     ref={inputAgeRef}
                     placeholder='Idade'
+                    defaultValue={routeParams?.age ? routeParams.age.toString() : ''}
+                    keyboardType='numeric'
                     style={{
                         paddingBottom: '5%',
                     }}
@@ -124,6 +172,7 @@ export const NewPetScreen = (props) => {
                 <Select
                     ref={selectSizeRef}
                     placeholder='Tamanho'
+                    defaultValue={routeParams?.size ? routeParams.size : ''}
                     style={{
                         with: '100%',
                         paddingBottom: '5%',
@@ -137,6 +186,7 @@ export const NewPetScreen = (props) => {
                 <Select
                     ref={selectGenreRef}
                     placeholder='Gênero'
+                    defaultValue={routeParams?.genre ? routeParams.genre : ''}
                     style={{
                         with: '100%',
                         paddingBottom: '5%',
@@ -146,9 +196,15 @@ export const NewPetScreen = (props) => {
                         { value: 'F', display: 'Feminino' },
                     ]}
                 />
-                <Button onPress={handleOnAddPetButtonPress}>
-                    Cadastrar
-                </Button>
+                {routeParams &&
+                    <Button onPress={handleOnAddOrEditPetButtonPress}>
+                        Salvar
+                    </Button>
+                    ||
+                    <Button onPress={handleOnAddOrEditPetButtonPress}>
+                        Cadastrar
+                    </Button>
+                }
             </Layout>
         </Layout>
     );
