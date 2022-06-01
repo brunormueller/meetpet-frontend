@@ -49,6 +49,7 @@ const Select = forwardRef((props, ref) => {
     useImperativeHandle(ref, () => ({
         getValue,
         setValid,
+        setSelectedIndex,
     }));
 
     return (

@@ -6,7 +6,7 @@ import React, {
 import {
     Button,
     Layout,
-    Text,
+    IndexPath as KittenIndexPath,
 } from '@ui-kitten/components';
 
 import axios from 'axios';
@@ -26,9 +26,16 @@ export const NewPetScreen = (props) => {
         breeds: [],
     });
 
+    const selectBreedRef = createRef();
+
+    const getSelectBreedRef = () => {
+        return selectBreedRef.current;
+    };
+
     const getBreeds = async () => {
         try {
             const { data } = await axios.get(`${baseURL}/breeds`);
+
             setState({
                 loadData: false,
                 breeds: data,
@@ -46,10 +53,20 @@ export const NewPetScreen = (props) => {
         }, 0);
     }, [state.loadData, setState]);
 
+    useEffect(() => {
+        if (routeParams?.breed && state.breeds.length) {
+            const breedSelectedIndex = state.breeds.findIndex(breed => breed.id == routeParams.breed.id);
+
+            if (breedSelectedIndex >= 0) {
+                getSelectBreedRef().setSelectedIndex(new KittenIndexPath(breedSelectedIndex));
+            }
+        }
+    }, [routeParams, state.breeds]);
+
     const handleOnAddOrEditPetButtonPress = async () => {
         const name = inputNameRef.current.getValue();
         const age = parseInt(inputAgeRef.current.getValue());
-        const breed = selectBreedRef.current.getValue();
+        const breed = getSelectBreedRef().getValue();
         const size = selectSizeRef.current.getValue();
         const genre = selectGenreRef.current.getValue();
 
@@ -122,7 +139,6 @@ export const NewPetScreen = (props) => {
 
     const inputNameRef = createRef(null);
     const inputAgeRef = createRef(null);
-    const selectBreedRef = createRef(null);
     const selectSizeRef = createRef(null);
     const selectGenreRef = createRef(null);
 
@@ -161,6 +177,7 @@ export const NewPetScreen = (props) => {
                 <Select
                     ref={selectBreedRef}
                     placeholder='Raça'
+                    defaultValue={routeParams?.breed ? routeParams.breed.id.toString() : ''}
                     style={{
                         with: '100%',
                         paddingBottom: '5%',

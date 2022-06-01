@@ -13,7 +13,7 @@ const Input = forwardRef((props, ref) => {
     } = props;
 
     const errorMessage = props.errorMessage ? props.errorMessage : 'Campo obrigatório'
-    const keyboardType = props.keyboardType ? props.keyboardType : 'text'
+    const keyboardType = props.keyboardType ? props.keyboardType : 'default'
 
     const [value, setValue] = useState(defaultValue || '');
     const [valid, setValid] = useState(true);
