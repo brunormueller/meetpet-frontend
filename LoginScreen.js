@@ -39,8 +39,6 @@ export const LoginScreen = ({ navigation }) => {
             });
 
             if (data.type == 'R') {
-                navigation.navigate('Pets');
-            } else {
                 navigation.navigate('Home');
             }
         } catch (error) {

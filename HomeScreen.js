@@ -7,7 +7,11 @@ import {
     Layout,
     Text,
     // TopNavigation,
+    BottomNavigationTab,
+    BottomNavigation,
+    Tab
 } from '@ui-kitten/components';
+
 
 export const HomeScreen = () => {
     return (

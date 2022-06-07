@@ -1,60 +1,98 @@
 import React, {
-    createRef,
+  createRef,
 } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { BottomNavigation, BottomNavigationTab, Layout, Text } from '@ui-kitten/components';
+
 import { HomeScreen } from '../HomeScreen';
-import { LoginScreen } from '../LoginScreen';
-import { RegistryScreen } from '../RegistryScreen';
 import { PetsScreen } from '../PetsScreen';
+import { BreedsScreen } from '../BreedsScreen';
 import { NewPetScreen } from '../NewPetScreen';
+import { LoginScreen } from '../LoginScreen';
+import { NewBreedScreen } from '../NewBreedScreen';
 
-const { Navigator, Screen } = createStackNavigator();
+const { Navigator, Screen } = createBottomTabNavigator();
 
-const HomeNavigator = () => {
-    const petsScreenRef = createRef();
+const BottomTabBar = ({ navigation, state }) => (
+  <BottomNavigation
+    selectedIndex={state.index}
+    onSelect={index => navigation.navigate(state.routeNames[index])}>
+    <BottomNavigationTab title='Início'/>
+    <BottomNavigationTab title='Animais'/>
+    <BottomNavigationTab title='Raças'/>
+  </BottomNavigation>
+);
 
-    const getPetsScreenRef = () => {
-        return petsScreenRef.current;
-    };
+const TabNavigator = () => {
+  const petsScreenRef = createRef();
+  const breedsScreenRef = createRef();
+  
+  const getPetsScreenRef = () => {
+      return petsScreenRef.current;
+  };
+  
+  const handleOnInsertPet = () => {
+      getPetsScreenRef().refreshList();
+  };
+  
+  const getBreedsScreenRef = () => {
+    return breedsScreenRef.current;
+  };
+  
+  const handleOnInsertBreed = () => {
+    getBreedsScreenRef().refreshList();
+  };
+  return (
 
-    const handleOnInsertPet = () => {
-        getPetsScreenRef().refreshList();
-    };
-
-    return (
-        <Navigator screenOptions={{ headerShown: false }}>
-            <Screen name='Login' component={LoginScreen} />
-            <Screen name='Registry' component={RegistryScreen} />
-            <Screen name='Home' component={HomeScreen} />
-            <Screen
-                name='Pets'
-                component={({ navigation }) =>
+    <Navigator tabBar={props => <BottomTabBar {...props} />}>
+      <Screen name='Home' component={HomeScreen}/>
+      <Screen name='Pets' component={({ navigation }) =>
                     <PetsScreen
                         ref={petsScreenRef}
                         navigation={navigation}
                     />
-                }
-            />
-            <Screen
-                name='NewPet'
-                component={({
-                    route,
-                    navigation,
-                }) =>
-                    <NewPetScreen
-                        routeParams={route.params}
+                }/>
+      <Screen name='Breeds' component={({ navigation }) =>
+                    <BreedsScreen
+                        ref={breedsScreenRef}
                         navigation={navigation}
-                        onInsertPet={handleOnInsertPet}
                     />
-                }
-            />
-        </Navigator>
-    );
+                }/>
+
+      <Screen name='Login' component={LoginScreen} />
+      <Screen
+          name='NewPet'
+          component={({
+              route,
+              navigation,
+          }) =>
+              <NewPetScreen
+                  routeParams={route.params}
+                  navigation={navigation}
+                  onInsertPet={handleOnInsertPet}
+              />
+          }
+      />
+      <Screen
+          name='NewBreed'
+          component={({
+              route,
+              navigation,
+          }) =>
+              <NewBreedScreen
+                  routeParams={route.params}
+                  navigation={navigation}
+                  onInsertBreed={handleOnInsertBreed}
+              />
+          }
+      />
+    </Navigator>
+  )
 };
 
 export const AppNavigator = () => (
-    <NavigationContainer>
-        <HomeNavigator />
-    </NavigationContainer>
+  <NavigationContainer>
+    <TabNavigator/>
+  </NavigationContainer>
 );
