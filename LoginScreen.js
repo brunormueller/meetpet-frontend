@@ -1,6 +1,12 @@
 import React, {
     createRef,
 } from 'react';
+
+import {
+    setItemAsync,
+    getItemAsync
+} from 'expo-secure-store';
+
 import {
     SafeAreaView,
     TouchableOpacity,
@@ -14,6 +20,10 @@ import {
 
 import Input from './components/Input';
 import { baseURL } from './configs'
+
+const setSecureStoreItem = async (key, value) => {
+    await setItemAsync(key, value);
+}
 
 export const LoginScreen = ({ navigation }) => {
     const inputLoginRef = createRef(null);
@@ -37,10 +47,15 @@ export const LoginScreen = ({ navigation }) => {
                 login: getInputLoginRef().getValue(),
                 password: getInputPasswordRef().getValue(),
             });
+// console.log(data)
+            setSecureStoreItem('user_token', data.access_token_meet_pet);
+            setSecureStoreItem('user_type', data.type);
+            // setSecureStoreItem('user_id', data.id);
 
             if (data.type == 'R') {
                 navigation.navigate('Home');
             }
+
         } catch (error) {
             if (error && error.response && error.response.status == 401) {
                 alert('Usuário ou senha inválido');
@@ -49,6 +64,7 @@ export const LoginScreen = ({ navigation }) => {
             }
         }
     };
+    
 
     return (
         <SafeAreaView style={{ flex: 1 }}>
