@@ -4,7 +4,6 @@ import React, {
 
 import {
     setItemAsync,
-    getItemAsync
 } from 'expo-secure-store';
 
 import {
@@ -25,7 +24,12 @@ const setSecureStoreItem = async (key, value) => {
     await setItemAsync(key, value);
 }
 
-export const LoginScreen = ({ navigation }) => {
+export const LoginScreen = (props) => {
+    const {
+        navigation,
+        setUserToken,
+    } = props;
+
     const inputLoginRef = createRef(null);
     const inputPasswordRef = createRef(null);
 
@@ -38,7 +42,7 @@ export const LoginScreen = ({ navigation }) => {
     };
 
     const handleOnRegistryButtonPress = () => {
-        navigation.navigate('Registry');
+        navigation.navigate('Cadastro');
     };
 
     const handleOnLoginButtonPress = async () => {
@@ -47,14 +51,14 @@ export const LoginScreen = ({ navigation }) => {
                 login: getInputLoginRef().getValue(),
                 password: getInputPasswordRef().getValue(),
             });
-// console.log(data)
-            setSecureStoreItem('user_token', data.access_token_meet_pet);
-            setSecureStoreItem('user_type', data.type);
-            // setSecureStoreItem('user_id', data.id);
 
-            if (data.type == 'R') {
-                navigation.navigate('Home');
-            }
+            await setSecureStoreItem('user_token', data.access_token_meet_pet);
+            await setSecureStoreItem('user_type', data.type);
+            await setSecureStoreItem('user_id', data.id);
+
+            setUserToken(data.access_token_meet_pet);
+
+            // navigation.navigate('Home');
 
         } catch (error) {
             if (error && error.response && error.response.status == 401) {

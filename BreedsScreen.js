@@ -36,11 +36,11 @@ export const BreedsScreen = forwardRef((props, ref) => {
     };
 
     const handleOnNewBreedButtonPress = () => {
-        navigation.navigate('NewBreed');
+        navigation.navigate('Cadastar Raça');
     };
 
     const handleOnEditBreedButtonPress = item => {
-        navigation.navigate('NewBreed', item);
+        navigation.navigate('Cadastar Raça', item);
     };
 
     const handleOnDeleteBreedButtonPress = item => {

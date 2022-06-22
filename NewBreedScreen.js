@@ -43,7 +43,7 @@ export const NewBreedScreen = (props) => {
                 }
             }).then(({ status }) => {
                 if (status === 200 || status === 201 || status === 204) {
-                    navigation.navigate('Breeds');
+                    navigation.navigate('Raças');
                     alert(isEdit ? 'Raça editada com sucesso' : 'Raça cadastrada com sucesso');
                     onInsertBreed();
                 }

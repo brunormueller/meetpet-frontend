@@ -11,7 +11,10 @@ import {
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { BottomNavigation, BottomNavigationTab, Layout, Text } from '@ui-kitten/components';
+import {
+  BottomNavigation,
+  BottomNavigationTab,
+} from '@ui-kitten/components';
 
 import { HomeScreen } from '../HomeScreen';
 import { PetsScreen } from '../PetsScreen';
@@ -20,29 +23,19 @@ import { NewPetScreen } from '../NewPetScreen';
 import { LoginScreen } from '../LoginScreen';
 import { NewBreedScreen } from '../NewBreedScreen';
 import { RegistryScreen } from '../RegistryScreen'
+import { TopNavigation } from './TopNavigation';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
-const BottomTabBar = ({ navigation, state }) => {
-  const [userToken, setUserToken] = useState(null);
-
-  const getToken = useCallback(async () => {
-      let token = await getItemAsync('user_token');
-      setUserToken(token);
-    }, [setUserToken]);
-
-  useEffect(() => {
-    getToken();
-  }, [getToken]);
-
+const BottomTabBar = ({ navigation, state, userToken }) => {
   return (
-    userToken ? 
+    userToken ?
       (
         <BottomNavigation
           selectedIndex={state.index}
           onSelect={index => navigation.navigate(state.routeNames[index])}>
-          <BottomNavigationTab title='Início'/>
-          <BottomNavigationTab title='Animais'/>
+          <BottomNavigationTab title='Home'/>
+          <BottomNavigationTab title='Pets'/>
           <BottomNavigationTab title='Raças'/>
         </BottomNavigation>
       ) : (
@@ -52,7 +45,12 @@ const BottomTabBar = ({ navigation, state }) => {
   )
 }
 
-const TabNavigator = ({ state }) => {
+const TabNavigator = (props) => {
+  const {
+    userToken,
+    setUserToken,
+  } = props;
+
   const petsScreenRef = createRef();
   const breedsScreenRef = createRef();
   
@@ -72,18 +70,8 @@ const TabNavigator = ({ state }) => {
     getBreedsScreenRef().refreshList();
   };
 
-  const [userToken, setUserToken] = useState(null);
-  const getToken = useCallback(async () => {
-  let token = await getItemAsync('user_token');
-    setUserToken(token);
-  }, [setUserToken]);
-
-  useEffect(() => {
-    getToken();
-  }, [getToken]);
   return (
-    
-    <Navigator tabBar={props => <BottomTabBar {...props} />}>
+    <Navigator tabBar={props => <BottomTabBar {...props} userToken={userToken} />}>
       {userToken ? (
         <>
           <Screen
@@ -106,7 +94,7 @@ const TabNavigator = ({ state }) => {
             }
           />
           <Screen
-            name='Breeds'
+            name='Raças'
             component={({ navigation }) =>
               <BreedsScreen
                 userToken={userToken}
@@ -116,7 +104,7 @@ const TabNavigator = ({ state }) => {
             }
           />
           <Screen
-              name='NewPet'
+              name='Cadastrar pet'
               component={({
                   route,
                   navigation,
@@ -130,7 +118,7 @@ const TabNavigator = ({ state }) => {
               }
           />
           <Screen
-              name='NewBreed'
+              name='Cadastar Raça'
               component={({
                   route,
                   navigation,
@@ -146,18 +134,49 @@ const TabNavigator = ({ state }) => {
         </>
         ) : (
           <>
-            <Screen name='Login' component={LoginScreen} />
-            <Screen name='Registry' component={RegistryScreen} />
+            <Screen 
+              name='Login' 
+              component={({
+                route,
+                navigation,
+              }) =>
+                  <LoginScreen
+                    navigation={navigation}
+                    setUserToken={setUserToken}
+                  />
+              }
+            />
+            <Screen name='Cadastro' component={RegistryScreen} />
           </>
         )
-
       }
     </Navigator>
   )
 };
 
-export const AppNavigator = () => (
-  <NavigationContainer>
-    <TabNavigator/>
-  </NavigationContainer>
-);
+export const AppNavigator = () =>  {
+  const [userToken, setUserToken] = useState(null);
+  const getToken = useCallback(async () => {
+  let token = await getItemAsync('user_token');
+    setUserToken(token);
+  }, [setUserToken]);
+
+  useEffect(() => {
+    getToken();
+  }, [getToken]);
+
+    return (
+    <NavigationContainer>
+      {
+        userToken &&
+        <TopNavigation
+          setUserToken={setUserToken}
+        />
+      }
+      <TabNavigator 
+       userToken={userToken}
+        setUserToken={setUserToken}
+      />
+    </NavigationContainer>
+  );
+}
